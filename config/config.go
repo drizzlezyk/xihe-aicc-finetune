@@ -137,6 +137,12 @@ type UploadConfig struct {
 	OBSUtilPath    string `json:"obsutil_path"             required:"true"`
 }
 
+func (c *UploadConfig) SetDefault() {
+	if c.DownloadExpiry <= 0 {
+		c.DownloadExpiry = 3600
+	}
+}
+
 type OBSConfig struct {
 	AccessKey string `json:"access_key"    required:"true"`
 	SecretKey string `json:"secret_key"    required:"true"`
