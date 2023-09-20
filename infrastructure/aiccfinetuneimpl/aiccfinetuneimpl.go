@@ -36,15 +36,15 @@ func NewAiccFinetune(cfg *config.Config) (aiccfinetune.AICCFinetune, error) {
 		return nil, err
 	}
 
-	// h, err := newHelper(cfg)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	h, err := newHelper(cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	return aiccFinetuneImpl{
 		cli:    cli,
 		config: cfg.Finetune,
-		// helper: h,
+		helper: h,
 	}, nil
 }
 
