@@ -94,7 +94,7 @@ func (cli *aiccClient) terminateURL(jobId string) string {
 }
 
 func (cli *aiccClient) logURL(jobId string) string {
-	return cli.jobURL(jobId) + "/log"
+	return cli.jobURL(jobId) + "/tasks/worker-0/logs/url"
 }
 
 func (cli *aiccClient) createJob(options aicc.JobCreateOption) (jobId string, err error) {

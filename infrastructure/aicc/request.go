@@ -7,10 +7,6 @@ type JobCreateOption struct {
 	Spec      SpecOption      `json:"spec"`
 }
 
-// func (opts *JobCreateOption) toMap() (map[string]interface{}, error) {
-// 	return golangsdk.BuildRequestBody(opts, "")
-// }
-
 type MetadataOption struct {
 	Name string `json:"name" required:"true"`
 	Desc string `json:"description"`
@@ -64,80 +60,3 @@ type ResourceOption struct {
 type LogExportPathOption struct {
 	OBSURL string `json:"obs_url,omitempty"`
 }
-
-// func CreateJob(client *golangsdk.ServiceClient, opts JobCreateOption) (string, error) {
-// 	reqBody, err := opts.toMap()
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	r := golangsdk.Result{}
-// 	_, r.Err = client.Post(
-// 		createURL(client), reqBody, &r.Body,
-// 		&golangsdk.RequestOpts{OkCodes: []int{201}},
-// 	)
-
-// 	job := new(Job)
-// 	if err := r.ExtractInto(job); err != nil {
-// 		return "", err
-// 	}
-
-// 	return job.Metadata.Id, nil
-// }
-
-// func DeleteJob(client *golangsdk.ServiceClient, jobId string) error {
-// 	v, err := client.Delete(
-// 		jobURL(client, jobId),
-// 		&golangsdk.RequestOpts{OkCodes: []int{202}},
-// 	)
-
-// 	if err != nil && v.StatusCode == 404 {
-// 		err = nil
-// 	}
-
-// 	return err
-// }
-
-// // func TerminateJob(client *golangsdk.ServiceClient, jobId string) error {
-// // 	_, err := client.Post(
-// // 		actionURL(client, jobId),
-// // 		map[string]interface{}{
-// // 			"action_type": "terminate",
-// // 		},
-// // 		nil, &golangsdk.RequestOpts{OkCodes: []int{201, 202}},
-// // 	)
-
-// // 	return err
-// // }
-
-// func GetJob(client *golangsdk.ServiceClient, jobId string) (j Job, err error) {
-// 	r := golangsdk.Result{}
-// 	_, r.Err = client.Get(
-// 		jobURL(client, jobId), &r.Body,
-// 		&golangsdk.RequestOpts{OkCodes: []int{200}},
-// 	)
-
-// 	err = r.ExtractInto(&j)
-
-// 	return j, err
-// }
-
-// func GetLogDownloadURL(client *golangsdk.ServiceClient, jobId string) (string, error) {
-// 	r := golangsdk.Result{}
-// 	_, r.Err = client.Get(
-// 		logURL(client, jobId), &r.Body,
-// 		&golangsdk.RequestOpts{
-// 			MoreHeaders: map[string]string{
-// 				"Content-Type": "application/octet-stream",
-// 			},
-// 			OkCodes: []int{200},
-// 		},
-// 	)
-
-// 	var v struct {
-// 		OBSURL string `json:"obs_url"`
-// 	}
-// 	err := r.ExtractInto(&v)
-
-// 	return v.OBSURL, err
-// }
