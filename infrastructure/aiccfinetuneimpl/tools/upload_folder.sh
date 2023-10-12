@@ -1,8 +1,6 @@
 #!/bin/bash
 
 set -eu
-# don't set any options, otherwise it will fail arbitrarily
-# set -euo pipefail
 
 work_dir=$1
 obsutil=$2 # the path of obsutil
