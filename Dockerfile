@@ -8,7 +8,7 @@ MAINTAINER zengchen1024<chenzeng765@gmail.com>
 # build binary
 COPY . /go/src/github.com/opensourceways/xihe-aicc-finetune
 WORKDIR /go/src/github.com/opensourceways/xihe-aicc-finetune
-RUN GO111MODULE=on CGO_ENABLED=0 go build -o xihe-aicc-finetune
+RUN GO111MODULE=on CGO_ENABLED=0 go build -o xihe-aicc-finetune -buildmode=pie --ldflags "-s -linkmode 'external' -extldflags '-Wl,-z,now'"
 RUN tar -xf ./infrastructure/aiccfinetuneimpl/tools/obsutil.tar.gz
 
 # copy binary config and utils
