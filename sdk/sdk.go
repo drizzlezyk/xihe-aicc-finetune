@@ -18,7 +18,7 @@ type JobInfo = app.JobInfoDTO
 
 func NewAICCFinetuneCenter(endpoint string) AICCFinetuneCenter {
 	s := strings.TrimSuffix(endpoint, "/")
-	if p := "api/v1/aiccfinetune"; !strings.HasSuffix(s, p) {
+	if p := "/api/v1/aiccfinetune"; !strings.HasSuffix(s, p) {
 		s += p
 	}
 
@@ -68,6 +68,7 @@ func (t AICCFinetuneCenter) DeleteAICCFinetune(jobId string) error {
 }
 
 func (t AICCFinetuneCenter) TerminateeAICCFinetune(jobId string) error {
+	fmt.Printf("t.jobURL(jobId): %v\n", t.jobURL(jobId))
 	req, err := http.NewRequest(http.MethodPut, t.jobURL(jobId), nil)
 	if err != nil {
 		return err
