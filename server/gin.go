@@ -17,6 +17,7 @@ import (
 )
 
 type Service struct {
+	Log      *logrus.Entry
 	Port     int
 	Timeout  time.Duration
 	Finetune app.FinetuneService

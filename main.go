@@ -39,7 +39,7 @@ func gatherOptions(fs *flag.FlagSet, args ...string) (options, error) {
 }
 
 func main() {
-	logrusutil.ComponentInit("xihe-finetune-center")
+	logrusutil.ComponentInit("xihe-aicc-finetune")
 	log := logrus.NewEntry(logrus.StandardLogger())
 
 	o, err := gatherOptions(
@@ -83,6 +83,7 @@ func main() {
 	defer ws.Exit()
 
 	server.StartWebServer(&server.Service{
+		Log:      log,
 		Port:     o.service.Port,
 		Timeout:  o.service.GracePeriod,
 		Finetune: service,
