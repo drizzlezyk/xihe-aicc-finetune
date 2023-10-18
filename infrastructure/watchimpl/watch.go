@@ -2,6 +2,7 @@ package watchimpl
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 	"time"
 
@@ -49,8 +50,9 @@ type finetuneInfo struct {
 
 func (t *finetuneInfo) toIndex() pt.AICCFinetuneIndex {
 	return pt.AICCFinetuneIndex{
-		Id:   t.FinetuneId,
-		User: t.User.Account(),
+		Id:    t.FinetuneId,
+		User:  t.User.Account(),
+		Model: "wukong",
 	}
 }
 
@@ -131,7 +133,7 @@ func (w *Watcher) Run() {
 		case info := <-w.finetunes:
 			// use =="" stands for the case that the loop is done
 			if info.User == nil {
-				// w.log.Debug("finish a loop")
+				w.log.Debug("finish a loop")
 
 				t := start.Add(w.interval)
 
@@ -145,7 +147,8 @@ func (w *Watcher) Run() {
 
 			} else {
 				changed := w.check(&info)
-				// w.log.Debugf("check aicc finetune %s/%s", info.FinetuneId, info.JobId)
+				fmt.Printf("aicc info: %+v\n", info)
+				w.log.Debugf("check aicc finetune %s/%s", info.FinetuneId, info.JobId)
 				if info.isDone() {
 					index := info.toIndex()
 
@@ -158,6 +161,7 @@ func (w *Watcher) Run() {
 
 				} else {
 					if changed {
+						fmt.Printf("aicc info: %+v\n", info)
 						index := info.toIndex()
 						if err := w.cli.SetAICCFinetuneInfo(&index, &info.result); err != nil {
 							w.log.Errorf("set aicc finetune info failed, err:%s", err.Error())
