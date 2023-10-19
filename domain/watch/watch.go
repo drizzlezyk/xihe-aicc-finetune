@@ -5,6 +5,7 @@ import "github.com/opensourceways/xihe-aicc-finetune/domain"
 type FinetuneInfo struct {
 	User       domain.Account
 	FinetuneId string
+	Model      string
 
 	domain.JobInfo
 }

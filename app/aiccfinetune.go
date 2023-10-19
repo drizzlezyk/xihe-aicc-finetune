@@ -88,6 +88,7 @@ func (s *aiccFinetuneService) Create(cmd *AICCFinetuneCreateCmd) (JobInfoDTO, er
 		*info = watch.FinetuneInfo{
 			User:       cmd.User,
 			FinetuneId: cmd.FinetuneId,
+			Model:      cmd.Model.ModelName(),
 			JobInfo:    v,
 		}
 

@@ -18,7 +18,7 @@ type JobInfo = app.JobInfoDTO
 
 func NewAICCFinetuneCenter(endpoint string) AICCFinetuneCenter {
 	s := strings.TrimSuffix(endpoint, "/")
-	if p := "api/v1/aiccfinetune"; !strings.HasSuffix(s, p) {
+	if p := "/api/v1/aiccfinetune"; !strings.HasSuffix(s, p) {
 		s += p
 	}
 

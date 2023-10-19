@@ -49,8 +49,9 @@ type finetuneInfo struct {
 
 func (t *finetuneInfo) toIndex() pt.AICCFinetuneIndex {
 	return pt.AICCFinetuneIndex{
-		Id:   t.FinetuneId,
-		User: t.User.Account(),
+		Id:    t.FinetuneId,
+		User:  t.User.Account(),
+		Model: t.Model,
 	}
 }
 
@@ -131,7 +132,7 @@ func (w *Watcher) Run() {
 		case info := <-w.finetunes:
 			// use =="" stands for the case that the loop is done
 			if info.User == nil {
-				// w.log.Debug("finish a loop")
+				w.log.Debug("finish a loop")
 
 				t := start.Add(w.interval)
 
@@ -145,7 +146,7 @@ func (w *Watcher) Run() {
 
 			} else {
 				changed := w.check(&info)
-				// w.log.Debugf("check aicc finetune %s/%s", info.FinetuneId, info.JobId)
+				w.log.Debugf("check aicc finetune %s/%s", info.FinetuneId, info.JobId)
 				if info.isDone() {
 					index := info.toIndex()
 

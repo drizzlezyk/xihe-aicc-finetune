@@ -50,6 +50,7 @@ func (req *AICCFinetuneCreateRequest) toCmd(cmd *app.AICCFinetuneCreateCmd) (err
 	}
 
 	cmd.Task = req.Task
+	cmd.FinetuneId = req.FinetuneId
 
 	return
 }
