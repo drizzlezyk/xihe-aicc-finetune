@@ -24,6 +24,9 @@ WORKDIR /opt/app
 COPY --chown=mindspore --from=BUILDER /go/src/github.com/opensourceways/xihe-aicc-finetune/xihe-aicc-finetune /opt/app
 COPY --chown=mindspore --from=BUILDER /go/src/github.com/opensourceways/xihe-aicc-finetune/obsutil /opt/app
 COPY --chown=mindspore --from=BUILDER /go/src/github.com/opensourceways/xihe-aicc-finetune/infrastructure/aiccfinetuneimpl/tools/upload_folder.sh /opt/app
+RUN chmod 550 /opt/app/xihe-aicc-finetune
+RUN chmod 550 /opt/app/obsutil
+RUN chmod 550 /opt/app/upload_folder.sh
 
 ENTRYPOINT ["/opt/app/xihe-aicc-finetune"]
 
