@@ -16,6 +16,8 @@ const (
 	obsDelimiter = "/"
 	modelPathKey = "model_path"
 	dataPathKey  = "finetune_data_path"
+	loraPathKey  = "lora_ckpt_filepath"
+	bucketName   = "foundation-finetune"
 )
 
 var statusMap = map[string]domain.TrainingStatus{
@@ -97,8 +99,8 @@ func (impl aiccFinetuneImpl) Create(t *domain.AICCFinetune) (info domain.JobInfo
 	}
 
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
-	logDir := cfg.LogDir + t.Task + obsDelimiter + t.User.Account() + obsDelimiter
-	outputDir := cfg.OutputDir + t.Task + obsDelimiter + t.User.Account() + obsDelimiter
+	logDir := cfg.LogDir + t.Task + obsDelimiter + t.User.Account() + obsDelimiter + timestamp + obsDelimiter
+	outputDir := cfg.OutputDir + t.Task + obsDelimiter + t.User.Account() + obsDelimiter + timestamp + obsDelimiter
 
 	outputs := []aicc.InputOutputOption{}
 	outputs = append(outputs, aicc.InputOutputOption{
@@ -131,7 +133,7 @@ func (impl aiccFinetuneImpl) Create(t *domain.AICCFinetune) (info domain.JobInfo
 	opt := aicc.JobCreateOption{
 		Kind: "job",
 		Metadata: aicc.MetadataOption{
-			Name: t.Name.FinetuneName() + t.User.Account() + "-" + timestamp + "-" + t.Task,
+			Name: t.Name.FinetuneName() + "-" + t.User.Account() + "-" + timestamp + "-" + t.Task,
 			Desc: t.Desc.FinetuneDesc(),
 		},
 		Algorithm: aicc.AlgorithmOption{
@@ -162,7 +164,7 @@ func (impl aiccFinetuneImpl) Create(t *domain.AICCFinetune) (info domain.JobInfo
 	info.JobId, err = impl.cli.createJob(opt)
 
 	if err == nil {
-		p := ""
+		p := obsDelimiter + bucketName + obsDelimiter
 		info.LogDir = strings.TrimPrefix(logDir, p)
 		info.OutputDir = strings.TrimPrefix(outputDir, p)
 	}
@@ -177,8 +179,8 @@ func (impl aiccFinetuneImpl) CreateInference(t *domain.AICCFinetune) (info domai
 	}
 
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
-	logDir := cfg.LogDir + t.Task + t.User.Account() + obsDelimiter
-	outputDir := cfg.OutputDir + t.Task + t.User.Account() + obsDelimiter
+	logDir := cfg.LogDir + obsDelimiter + t.Task + t.User.Account() + obsDelimiter + timestamp + obsDelimiter
+	outputDir := cfg.OutputDir + t.Task + obsDelimiter + t.User.Account() + obsDelimiter + timestamp + obsDelimiter
 
 	outputs := []aicc.InputOutputOption{}
 	outputs = append(outputs, aicc.InputOutputOption{
@@ -201,7 +203,7 @@ func (impl aiccFinetuneImpl) CreateInference(t *domain.AICCFinetune) (info domai
 	})
 
 	inputs = append(inputs, aicc.InputOutputOption{
-		Name: dataPathKey,
+		Name: loraPathKey,
 		Remote: aicc.RemoteOption{
 			OBS: aicc.OBSOption{
 				OBSURL: cfg.InputDir + t.Task + t.User.Account() + obsDelimiter,
@@ -212,7 +214,7 @@ func (impl aiccFinetuneImpl) CreateInference(t *domain.AICCFinetune) (info domai
 	opt := aicc.JobCreateOption{
 		Kind: "job",
 		Metadata: aicc.MetadataOption{
-			Name: t.Name.FinetuneName() + t.User.Account() + "-" + timestamp + "-" + t.Task,
+			Name: t.Name.FinetuneName() + "-" + t.User.Account() + "-" + timestamp + "-" + t.Task,
 			Desc: t.Desc.FinetuneDesc(),
 		},
 		Algorithm: aicc.AlgorithmOption{
@@ -243,7 +245,7 @@ func (impl aiccFinetuneImpl) CreateInference(t *domain.AICCFinetune) (info domai
 	info.JobId, err = impl.cli.createJob(opt)
 
 	if err == nil {
-		p := ""
+		p := obsDelimiter + bucketName + obsDelimiter
 		info.LogDir = strings.TrimPrefix(logDir, p)
 		info.OutputDir = strings.TrimPrefix(outputDir, p)
 	}
@@ -273,12 +275,8 @@ func (impl aiccFinetuneImpl) Delete(jobId string) error {
 	return err
 }
 
-func (impl aiccFinetuneImpl) GetLogFilePath(jobId string) (string, error) {
+func (impl aiccFinetuneImpl) GetLogURL(jobId string) (string, error) {
 	return impl.cli.getLogURL(jobId)
-}
-
-func (impl aiccFinetuneImpl) GenOutput(jobId string) (string, error) {
-	return impl.uploadFolder(jobId)
 }
 
 func (impl aiccFinetuneImpl) GetLogDownloadURL(outputDir string) (string, error) {

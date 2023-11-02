@@ -14,6 +14,11 @@ import (
 	"github.com/opensourceways/xihe-aicc-finetune/domain/watch"
 )
 
+const (
+	outputFileName = "output.tar.gz"
+	obsDelimiter   = "/"
+)
+
 type aiccFinetuneData = pt.AICCFinetuneInfo
 
 func NewWatcher(
@@ -132,8 +137,6 @@ func (w *Watcher) Run() {
 		case info := <-w.finetunes:
 			// use =="" stands for the case that the loop is done
 			if info.User == nil {
-				w.log.Debug("finish a loop")
-
 				t := start.Add(w.interval)
 
 				if n := time.Now(); t.After(n) {
@@ -146,10 +149,8 @@ func (w *Watcher) Run() {
 
 			} else {
 				changed := w.check(&info)
-				w.log.Debugf("check aicc finetune %s/%s", info.FinetuneId, info.JobId)
 				if info.isDone() {
 					index := info.toIndex()
-
 					if err := w.cli.SetAICCFinetuneInfo(&index, &info.result); err == nil {
 						w.decrease()
 					} else {
@@ -239,17 +240,8 @@ func (w *Watcher) check(info *finetuneInfo) (changed bool) {
 		return
 	}
 
-	if !info.outputDone {
-		if v, err := w.as.GenOutput(info.OutputDir); err != nil {
-			w.log.Errorf("generate output failed, err:%s", err.Error())
-		} else {
-			info.outputDone = true
-
-			if v != "" {
-				result.OutputZipPath = v
-				changed = true
-			}
-		}
+	if info.success {
+		result.OutputZipPath = info.OutputDir + outputFileName
 	}
 
 	return

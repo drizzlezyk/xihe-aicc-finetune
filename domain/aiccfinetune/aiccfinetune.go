@@ -20,10 +20,6 @@ type AICCFinetune interface {
 	// GetLogFilePath return the obs path of log
 	GetLogFilePath(logDir string) (string, error)
 
-	// GenOutput generates the zip file of output dir and
-	// return the obs path of that file.
-	GenOutput(outputDir string) (string, error)
-
 	// GenFileDownloadURL generate the temprary
 	// download url of obs file.
 	GenFileDownloadURL(p string) (string, error)

@@ -224,7 +224,8 @@ func (cli *aiccClient) terminateJob(jobId string) (err error) {
 	if err != nil {
 		return
 	}
-	if resp.StatusCode != 200 {
+
+	if resp.StatusCode != 202 {
 		err = errors.New(resp.Status)
 	}
 
